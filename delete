@@ -1,0 +1,20 @@
+#coding: utf-8
+import requests
+headers = {"Authorization": "token 9eba1e6bed2a1c3ebeb5b21bfb3a40f1881802c3"}#要有token字段 访问令牌有效
+user = requests.get('https://api.github.com/users/oceanlay', headers=headers).json()
+print(user)  #获取授权用户的信息
+response= requests.get('https://api.github.com/users/oceanlay')
+print(response.status_code)
+print(response.json())
+params = {"per_page": 50, "page": 1} #获取github作者所关注的项目，并将50条结果作为一页，获取第一页的内容
+response= requests.get("https://api.github.com/users/oceanlay/starred", params=params)
+print(response.json())
+load = {"name": 'write-a-new-repository'}#name参数即自己要创建的项目名称
+status = requests.post('https://api.github.com/user/repos',headers= headers, json=load).status_code
+print(status) #POST请求用于向服务器发送信息，然后在服务器上创建对象，如：创建一个项目，创建成功返回201
+load = {'description':'Learning about requests!','name':'write-a-new-repository'}
+status = requests.patch('https://api.github.com/repos/oceanlay/write-a-new-repository',json= load,headers= headers).status_code
+print(status)
+#删除项目：返回身份验证错误 后来发现是创建访问令牌时需勾选删除仓库
+status_delete = requests.delete('https://api.github.com/repos/oceanlay/write-a-new-repository',headers= headers).status_code
+print(status_delete)
